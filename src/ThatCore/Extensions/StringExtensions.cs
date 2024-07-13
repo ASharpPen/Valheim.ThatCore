@@ -14,10 +14,10 @@ public enum Separator
 
 public static class StringExtensions
 {
-    private static readonly char[] Comma = new[] { ',' };
-    private static readonly char[] Slash = new[] { '/', '\\' };
-    private static readonly char[] Dot = new[] { '.' };
-    private static readonly char[] Newline = new[] { '\n' };
+    private static readonly char[] Comma = [','];
+    private static readonly char[] Slash = ['/', '\\'];
+    private static readonly char[] Dot = ['.'];
+    private static readonly char[] Newline = ['\n'];
 
     public static List<string> SplitBy(this string value, Separator separator, bool toUpper = false)
     {
@@ -46,7 +46,9 @@ public static class StringExtensions
             return Enumerable.Empty<string>();
         }
 
-        var split = value.Split(chars, StringSplitOptions.RemoveEmptyEntries);
+        var split = value
+            .Trim()
+            .Split(chars, StringSplitOptions.RemoveEmptyEntries);
 
         if ((split?.Length ?? 0) == 0)
         {
