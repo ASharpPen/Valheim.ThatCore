@@ -4,6 +4,7 @@
     <RootNamespace>ThatCore</RootNamespace>
     <AssemblyName>ThatCore.Valheim</AssemblyName>
 	<Authors>A Sharp Pen</Authors>
+	  <Version>1.0.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ThatCore\ThatCore.csproj" />
