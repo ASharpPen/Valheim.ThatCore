@@ -3,7 +3,7 @@
 namespace ThatCore.Lifecycle.Patches;
 
 [HarmonyPatch(typeof(Game))]
-internal static class Game_FindSpawnPoint_TriggerLifecycle_Patch
+public static class Game_FindSpawnPoint_TriggerLifecycle_Patch
 {
     private static bool FirstTime = true;
 

@@ -3,7 +3,7 @@
 namespace ThatCore.Lifecycle.Patches;
 
 [HarmonyPatch]
-internal static class FejdStartup_TriggerLifecycle_Patch
+public static class FejdStartup_TriggerLifecycle_Patch
 {
     /// <summary>
     /// Singleplayer

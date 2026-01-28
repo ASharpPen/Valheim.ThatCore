@@ -5,7 +5,7 @@ using ThatCore.Logging;
 namespace ThatCore.Lifecycle.Patches;
 
 [HarmonyPatch]
-internal static class ZNet_Update_Patch
+public static class ZNet_Update_Patch
 {
     [HarmonyPatch(typeof(ZNet), nameof(ZNet.Update))]
     [HarmonyPostfix]
