@@ -2,10 +2,10 @@
 $profilePath = ""
 
 # Path to Valheim\valheim_Data\Managed dir.
-$valheimPath = ""
+$valheimPath = "C:\Program Files (x86)\Steam\steamapps\common\Valheim\valheim_Data\Managed"
 
 # Path to nstrip.exe dir
-$nstripPath = ".\";
+$nstripDir = "..\nstrip";
 
 $output = "..\libs\";
 
@@ -40,10 +40,10 @@ function Strip
   }
 
   if($Publicize) { 
-    & .\Nstrip.exe -p -cg -d $valheimPath $Source $out
+    & $nstripDir\Nstrip.exe -p -cg -d $valheimPath $Source $out
   }
   else {
-    & .\Nstrip.exe -cg -d $valheimPath $Source $out
+    & $nstripDir\Nstrip.exe -cg -d $valheimPath $Source $out
   }
   
   Write-Host "-Source $Source -TargetDir $out"
@@ -75,6 +75,17 @@ function CopyFile
   }
 
   Write-Host "-Source $Source -TargetDir $out"
+}
+
+# NStrip
+if (-not(Test-Path($nstripDir)))
+{
+  New-Item -ItemType Directory -Path $nstripDir
+}
+
+if (-not(Test-Path "$nstripDir\NStrip.exe"))
+{
+  Invoke-WebRequest "https://github.com/bbepis/NStrip/releases/download/v1.4.1/NStrip.exe" -OutFile "$nstripDir\NStrip.exe"
 }
 
 # BepInEx 

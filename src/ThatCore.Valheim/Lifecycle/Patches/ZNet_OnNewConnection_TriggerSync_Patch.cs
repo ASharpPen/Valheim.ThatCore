@@ -3,7 +3,7 @@
 namespace ThatCore.Lifecycle.Patches;
 
 [HarmonyPatch(typeof(ZNet))]
-internal static class ZNet_OnNewConnection_TriggerSync_Patch
+public static class ZNet_OnNewConnection_TriggerSync_Patch
 {
     [HarmonyPatch(nameof(ZNet.OnNewConnection))]
     [HarmonyPostfix]
