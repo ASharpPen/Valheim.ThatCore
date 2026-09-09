@@ -351,3 +351,4 @@ MigrationBackup/
 libs/*/
 scripts/NStrip.exe
 nstrip
+src/ThatCore.Valheim.Generator/Generated
