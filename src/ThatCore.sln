@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32811.315
+# Visual Studio Version 18
+VisualStudioVersion = 18.8.12023.21 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThatCore", "ThatCore\ThatCore.csproj", "{6C634D99-3D29-4DF9-B585-FB3117910742}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThatCore.Shared", "ThatCore.Shared\ThatCore.Shared.csproj", "{34A6046F-4280-408C-B7F4-0F8001D0709B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThatCore.Valheim", "ThatCore.Valheim\ThatCore.Valheim.csproj", "{70319A04-82BC-4DE6-B927-56E05AD26052}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThatCore.Valheim.Generator", "ThatCore.Valheim.Generator\ThatCore.Valheim.Generator.csproj", "{36181AA2-0D14-4A9D-9CA0-AF71FE165251}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{70319A04-82BC-4DE6-B927-56E05AD26052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70319A04-82BC-4DE6-B927-56E05AD26052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70319A04-82BC-4DE6-B927-56E05AD26052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36181AA2-0D14-4A9D-9CA0-AF71FE165251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36181AA2-0D14-4A9D-9CA0-AF71FE165251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36181AA2-0D14-4A9D-9CA0-AF71FE165251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36181AA2-0D14-4A9D-9CA0-AF71FE165251}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
