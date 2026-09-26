@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ThatCore.Extensions;
 using ThatCore.Logging;
 
-namespace ThatCore.Lifecycle;
+namespace ThatCore.Valheim.Lifecycle;
 
 public static class LifecycleManager
 {

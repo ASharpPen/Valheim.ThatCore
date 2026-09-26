@@ -2,13 +2,17 @@
 using HarmonyLib;
 using ThatCore.Logging;
 
-namespace ThatCore.Lifecycle.Patches;
+namespace ThatCore.Valheim.Lifecycle.Patches;
 
-[HarmonyPatch]
 public static class ZNet_Update_Patch
 {
-    [HarmonyPatch(typeof(ZNet), nameof(ZNet.Update))]
-    [HarmonyPostfix]
+    public static void Patch(Harmony harmony)
+    {
+        harmony.Patch(
+            original: AccessTools.Method(typeof(ZNet), nameof(ZNet.Update)),
+            postfix: new HarmonyMethod(((Action)HookZnetUpdate).Method));
+    }
+
     private static void HookZnetUpdate()
     {
         try

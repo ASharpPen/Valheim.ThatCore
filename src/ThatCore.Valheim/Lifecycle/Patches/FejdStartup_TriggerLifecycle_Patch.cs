@@ -1,28 +1,27 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 
-namespace ThatCore.Lifecycle.Patches;
+namespace ThatCore.Valheim.Lifecycle.Patches;
 
-[HarmonyPatch]
 public static class FejdStartup_TriggerLifecycle_Patch
 {
-    /// <summary>
-    /// Singleplayer
-    /// </summary>
-    [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.OnWorldStart))]
-    [HarmonyPrefix]
-    private static void InitSingleplayer() => LifecycleManager.InitSingleplayer();
+    public static void Patch(Harmony harmony)
+    {
+        var patchType = typeof(FejdStartup);
 
-    /// <summary>
-    /// Multiplayer
-    /// </summary>
-    [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.JoinServer))]
-    [HarmonyPrefix]
-    private static void InitMultiplayer() => LifecycleManager.InitMultiplayer();
+        // Singleplayer
+        harmony.Patch(
+            original: AccessTools.Method(patchType, nameof(FejdStartup.OnWorldStart)),
+            prefix: new HarmonyMethod(((Action)LifecycleManager.InitSingleplayer).Method));
 
-    /// <summary>
-    /// Server
-    /// </summary>
-    [HarmonyPatch(typeof(FejdStartup), nameof(FejdStartup.ParseServerArguments))]
-    [HarmonyPrefix]
-    private static void InitDedicated() => LifecycleManager.InitDedicated();
+        // Multiplayer
+        harmony.Patch(
+            original: AccessTools.Method(patchType, nameof(FejdStartup.JoinServer)),
+            prefix: new HarmonyMethod(((Action)LifecycleManager.InitMultiplayer).Method));
+
+        // Server
+        harmony.Patch(
+            original: AccessTools.Method(patchType, nameof(FejdStartup.ParseServerArguments)),
+            prefix: new HarmonyMethod(((Action)LifecycleManager.InitDedicated).Method));
+    }
 }

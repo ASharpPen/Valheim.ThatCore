@@ -1,6 +1,6 @@
 ﻿using ThatCore.Extensions;
 
-namespace ThatCore.Utilities.Valheim;
+namespace ThatCore.Valheim.Extensions;
 
 public static class ZdoExtensions
 {
@@ -23,7 +23,6 @@ public static class ZdoExtensions
     // Custom ZDO entries
     private static int FactionHash = "faction".GetStableHashCode();
 #endif
-
 
     public static float GetNoise(this ZDO zdo)
     {
@@ -59,7 +58,7 @@ public static class ZdoExtensions
     /// <summary>
     /// Sets "faction" in zdo.
     /// </summary>
-    /// <remarks>Spawn That setting.</remarks>
+    /// <remarks>Custom setting. Originally added by Spawn That.</remarks>
     public static void SetFaction(this ZDO zdo, Character.Faction faction)
     {
         zdo.Set(FactionHash, (int)faction);

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <TargetFramework>net48</TargetFramework>
-    <RootNamespace>ThatCore</RootNamespace>
+    <RootNamespace>ThatCore.Valheim</RootNamespace>
     <AssemblyName>ThatCore.Valheim</AssemblyName>
 	<Authors>A Sharp Pen</Authors>
 	  <Version>1.1.0</Version>

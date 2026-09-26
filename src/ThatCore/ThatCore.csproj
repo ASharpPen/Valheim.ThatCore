@@ -12,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="HarmonyX" Version="2.10.2" />
-	<PackageReference Include="YamlDotNet" Version="13.7.1" />
+	<PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="BepInEx">
