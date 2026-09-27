@@ -16,5 +16,6 @@ public interface IFileMappingBuilder<TTarget> : IFileMappingBuilder
 
     IFileMappingBuilder<TSubTarget> Using<TSubTarget>(
         Func<TTarget, TSubTarget> selector,
-        bool skipIfNull = true);
+        bool skipIfNull = true,
+        bool skipIfNoSettingsSet = true);
 }

@@ -11,8 +11,12 @@ namespace ThatCore.Config.Toml.Mapping;
 [TestClass]
 public class MapperLayerTests
 {
-    [TestMethod]
-    public void Test()
+    private MappingFrontend Front;
+    private ConfigToObjectMapper<Template> TemplateMapper;
+    private ITomlSchemaLayer Schema;
+
+    [TestInitialize]
+    public void TestSetup()
     {
         // Define toml layers
         var builder = new TomlSchemaBuilder();
@@ -95,7 +99,7 @@ public class MapperLayerTests
             ;
 
         // Setup fake mapper
-        var front = new MappingFrontend()
+        Front = new MappingFrontend()
         {
             TomlBuilder = builder,
             TopNode = topLayer,
@@ -109,10 +113,14 @@ public class MapperLayerTests
         };
 
         // Test file to template mapping
-        var templateMapper = front.CreateMapper(new Template());
+        TemplateMapper = Front.CreateMapper(new Template());
 
-        var schema = builder.Build();
+        Schema = builder.Build();
+    }
 
+    [TestMethod]
+    public void CanLoadFileWithSchemaLayers()
+    {
         // Load schema from file
         string file = @"
 [WorldSpawner.1]
@@ -123,18 +131,39 @@ Amount.Min = 5
 ModKey = TestKeyValue
 ";
 
-        var config = TomlSchemaFileLoader.Load(file.SplitBy(Separator.Newline), "test.cfg", schema);
+        var config = TomlSchemaFileLoader.Load(file.SplitBy(Separator.Newline), "test.cfg", Schema);
 
-        var resultTemplate = templateMapper.Execute(config);
+        var resultTemplate = TemplateMapper.Execute(config);
 
         // Test template to file mapping
-        var fileResult = front.MapToConfigFromTemplates(resultTemplate.Entries.Values);
+        var fileResult = Front.MapToConfigFromTemplates(resultTemplate.Entries.Values);
 
         var fileStringResult = TomlConfigWriter.WriteToString(fileResult, new());
 
         var fileStringResult2 = TomlConfigWriter.WriteToString(config, new());
 
-        fileStringResult.Trim().Should().Be(file.Trim());
+        fileStringResult.Trim()
+            .Should().Be(file.Trim());
+    }
+
+    [TestMethod]
+    public void WillSkipUsingFuncIfNoMappingsSet()
+    {
+        // Load schema from file
+        string file = @"
+[WorldSpawner.1]
+Enabled = false
+
+[WorldSpawner.1.TestMod]
+ModKey = TestKeyValue
+";
+
+        var config = TomlSchemaFileLoader.Load(file.SplitBy(Separator.Newline), "test.cfg", Schema);
+
+        var resultTemplate = TemplateMapper.Execute(config);
+
+        resultTemplate.Entries.Values.First().Amount
+            .Should().BeNull("None of the settings mapped where present in loaded file.");
     }
 
     public class MappingFrontend
