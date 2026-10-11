@@ -4,10 +4,11 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using HarmonyLib;
-using ThatCore.Lifecycle;
 using ThatCore.Logging;
+using ThatCore.Network;
+using ThatCore.Valheim.Lifecycle;
 
-namespace ThatCore.Network;
+namespace ThatCore.Valheim.Network;
 
 public static class OutgoingMessageService
 {
@@ -82,11 +83,15 @@ public static class OutgoingMessageService
         return Task.CompletedTask;
     }
 
-    [HarmonyPatch(typeof(ZNetPeer))]
     internal static class Cleanup
     {
-        [HarmonyPatch(nameof(ZNetPeer.Dispose))]
-        [HarmonyPrefix]
+        public static void Patch(Harmony harmony)
+        {
+            harmony.Patch(
+                original: AccessTools.Method(typeof(ZNetPeer), nameof(ZNetPeer.Dispose)),
+                prefix: new HarmonyMethod(((Action<ZNetPeer>)Dispose).Method));
+        }
+
         private static void Dispose(ZNetPeer __instance)
         {
             var socketQueueIdentifier = __instance.m_socket.GetEndPointString();

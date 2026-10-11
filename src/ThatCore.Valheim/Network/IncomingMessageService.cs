@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
-using ThatCore.Lifecycle;
 using ThatCore.Logging;
+using ThatCore.Network;
+using ThatCore.Valheim.Lifecycle;
 
-namespace ThatCore.Network;
+namespace ThatCore.Valheim.Network;
 
 public static class IncomingMessageService
 {

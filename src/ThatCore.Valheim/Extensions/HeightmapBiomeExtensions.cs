@@ -1,24 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace ThatCore.Utilities.Valheim;
+namespace ThatCore.Valheim.Extensions;
 
 public static class HeightmapBiomeExtensions
 {
+    public static List<Heightmap.Biome> GetBiomes(bool includeCombined = false)
+    {
+        var possibleValues = (Heightmap.Biome[])Enum.GetValues(typeof(Heightmap.Biome));
+
+        if (includeCombined)
+        {
+            return possibleValues.ToList();
+        }
+
+        bool[] added = new bool[possibleValues.Length];
+        List<Heightmap.Biome> results = [];
+
+        for (int i = 0; i < possibleValues.Length; ++i)
+        {
+            var value = possibleValues[i];
+
+            if (value != 0 &&
+                (value & (value - 1)) == 0 && // Check if only one (or 0) bit is set.
+                !added[i])
+            {
+                added[i] = true;
+                results.Add(value);
+            }
+        }
+
+        return results;
+    }
+
     public static List<Heightmap.Biome> Split(this Heightmap.Biome biomeMask)
     {
         List<Heightmap.Biome> result = new List<Heightmap.Biome>();
 
-        foreach (Heightmap.Biome value in Enum.GetValues(typeof(Heightmap.Biome)))
+        foreach (Heightmap.Biome value in GetBiomes())
         {
-            if (value == Heightmap.Biome.All)
-            {
-                if (biomeMask == Heightmap.Biome.All)
-                {
-                    result.Add(value);
-                }
-            }
-            else if ((biomeMask & value) > 0)
+            if ((biomeMask & value) > 0)
             {
                 result.Add(value);
             }
@@ -38,7 +60,6 @@ public static class HeightmapBiomeExtensions
 
         return bitmask;
     }
-
 
     public static Heightmap.Biome ToBitmask(this IEnumerable<Heightmap.Biome> biomes)
     {

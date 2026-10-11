@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ThatCore.Utilities.Valheim;
+namespace ThatCore.Valheim.Extensions;
 
 public static class HitDataDamageTypeExtensions
 {

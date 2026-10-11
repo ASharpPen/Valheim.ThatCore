@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 
-namespace ThatCore.Lifecycle.Patches;
+namespace ThatCore.Valheim.Lifecycle.Patches;
 
-[HarmonyPatch(typeof(Game))]
 public static class Game_FindSpawnPoint_TriggerLifecycle_Patch
 {
     private static bool FirstTime = true;
@@ -15,8 +15,13 @@ public static class Game_FindSpawnPoint_TriggerLifecycle_Patch
         });
     }
 
-    [HarmonyPatch(nameof(Game.FindSpawnPoint))]
-    [HarmonyPostfix]
+    public static void Patch(Harmony harmony)
+    {
+        harmony.Patch(
+            original: AccessTools.Method(typeof(Game), nameof(Game.FindSpawnPoint)),
+            postfix: new HarmonyMethod(((Action)TriggerLifecycle).Method));
+    }
+
     private static void TriggerLifecycle()
     {
         if (FirstTime)

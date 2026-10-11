@@ -1,14 +1,14 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 
-namespace ThatCore.Lifecycle.Patches;
+namespace ThatCore.Valheim.Lifecycle.Patches;
 
-[HarmonyPatch(typeof(ZNet))]
 public static class ZNet_OnNewConnection_TriggerSync_Patch
 {
-    [HarmonyPatch(nameof(ZNet.OnNewConnection))]
-    [HarmonyPostfix]
-    private static void TriggerLifecycle(ZNetPeer peer)
+    public static void Patch(Harmony harmony)
     {
-        LifecycleManager.PeerConnected(peer);
+        harmony.Patch(
+            original: AccessTools.Method(typeof(ZNet), nameof(ZNet.OnNewConnection)),
+            postfix: new HarmonyMethod(((Action<ZNetPeer>)LifecycleManager.PeerConnected).Method));
     }
 }

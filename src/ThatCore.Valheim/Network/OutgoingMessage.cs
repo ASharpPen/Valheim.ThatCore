@@ -1,4 +1,4 @@
-﻿namespace ThatCore.Network;
+﻿namespace ThatCore.Valheim.Network;
 
 public class OutgoingMessage
 {

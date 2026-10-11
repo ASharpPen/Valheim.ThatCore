@@ -62,12 +62,14 @@ public class FileMappingBuilder<TTarget>
 
     public IFileMappingBuilder<TSubTarget> Using<TSubTarget>(
         Func<TTarget, TSubTarget> selector,
-        bool skipIfNull = true)
+        bool skipIfNull = true,
+        bool skipIfNoSettingsSet = true)
     {
         var builder = new SubFileMappingBuilder<TTarget, TSubTarget>(
             NodeBuilder, 
             selector,
-            skipIfNull);
+            skipIfNull,
+            skipIfNoSettingsSet);
 
         SubBuilders.Add(builder);
 
@@ -83,20 +85,33 @@ internal class SubFileMappingBuilder<TTarget, TSubTarget>
 
     private Func<TTarget, TSubTarget> SubSelector { get; }
 
-    private Action<TomlConfig, TSubTarget> Mapping { get; set; }
+    private Action<ExecutionContext> Mapping { get; set; }
 
     private List<IHaveMapping<TSubTarget>> SubBuilders { get; } = new();
 
     private bool SkipIfSubTargetNull { get; set; }
 
+    private bool SkipIfNoSettingsSet { get; set; }
+
+    private sealed class ExecutionContext(SubFileMappingBuilder<TTarget, TSubTarget> builder)
+    {
+        public Func<TTarget, TSubTarget> SubSelector = builder.SubSelector;
+        public bool SkipIfSubTargetNull = builder.SkipIfSubTargetNull;
+        public TomlConfig Config;
+        public TTarget Target;
+        public TSubTarget SubSelected;
+    }
+
     public SubFileMappingBuilder(
         ITomlSchemaNodeBuilder nodeBuilder,
         Func<TTarget, TSubTarget> subSelector,
-        bool skipIfSubTargetNull)
+        bool skipIfSubTargetNull,
+        bool skipIfNoSettingsSet)
     {
         NodeBuilder = nodeBuilder;
         SubSelector = subSelector;
         SkipIfSubTargetNull = skipIfSubTargetNull;
+        SkipIfNoSettingsSet = skipIfNoSettingsSet;
     }
 
     public IFileMappingBuilder<TSubTarget> Map<TOption>(
@@ -112,14 +127,22 @@ internal class SubFileMappingBuilder<TTarget, TSubTarget>
                 Value = defaultValue
             });
 
-        Mapping += (TomlConfig config, TSubTarget target) =>
+        Mapping += (ExecutionContext context) =>
         {
-            var setting = config.GetSetting<TOption>(configName);
+            var setting = context.Config.GetSetting<TOption>(configName);
 
             if (setting is not null &&
                 setting.IsSet)
             {
-                fileToTargetMapping(setting.Value, target);
+                context.SubSelected ??= context.SubSelector(context.Target);
+
+                if (context.SkipIfSubTargetNull && 
+                    context.SubSelected is null)
+                {
+                    return;
+                }
+
+                fileToTargetMapping(setting.Value, context.SubSelected);
             }
         };
 
@@ -130,33 +153,41 @@ internal class SubFileMappingBuilder<TTarget, TSubTarget>
 
     public void Execute(TomlConfig config, TTarget target)
     {
-        var subTarget = SubSelector(target);
+        ExecutionContext context = new(this)
+        {
+            Config = config,
+            Target = target,
+            SubSelected = SkipIfNoSettingsSet ? default : SubSelector(target),
+        };
 
-        if (SkipIfSubTargetNull && 
-            subTarget is null)
+        if (!SkipIfNoSettingsSet &&
+            SkipIfSubTargetNull &&
+            context.SubSelected is null)
         {
             return;
         }
 
         if (Mapping is not null)
         {
-            Mapping(config, subTarget);
+            Mapping(context);
         }
 
         foreach (var builder in SubBuilders)
         {
-            builder.Execute(config, subTarget);
+            builder.Execute(config, context.SubSelected);
         }
     }
 
     public IFileMappingBuilder<T> Using<T>(
         Func<TSubTarget, T> selector,
-        bool skipIfNull = true)
+        bool skipIfNull = true,
+        bool skipIfNoSettingsSet = true)
     {
         var builder = new SubFileMappingBuilder<TSubTarget, T>(
             NodeBuilder, 
             selector,
-            skipIfNull
+            skipIfNull,
+            skipIfNoSettingsSet
             );
 
         SubBuilders.Add(builder);

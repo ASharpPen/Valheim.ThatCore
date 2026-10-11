@@ -1,4 +1,4 @@
-﻿namespace ThatCore.Lifecycle;
+﻿namespace ThatCore.Valheim.Lifecycle;
 
 public enum GameState
 {

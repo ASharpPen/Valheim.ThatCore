@@ -1,0 +1,9 @@
+<Project>
+	<Target Name="ThatCore_Internalize_Merge"
+			BeforeTargets="GenerateMSBuildEditorConfigFileShouldRun"
+			Condition="'@(ThatCore_Internalize)' != ''">
+		<PropertyGroup>
+			<ThatCore_Internalize>$(ThatCore_Internalize);@(ThatCore_Internalize)</ThatCore_Internalize>
+		</PropertyGroup>
+	</Target>
+</Project>
